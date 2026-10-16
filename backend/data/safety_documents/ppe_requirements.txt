@@ -1,0 +1,44 @@
+# PERSONAL PROTECTIVE EQUIPMENT (PPE) MANDATORY STANDARD
+Document ID: SOP-LAB-PPE-004
+Revision: 5.0 | Classification: OSHA 1910.132 / Biosafety Laboratory Standard
+
+1. CORE PPE REQUIREMENTS FOR LABORATORY ENTRY
+Whenever entering an active chemical, biological, or analytical laboratory, all personnel (researchers, technicians, students, visitors) must don the foundational "Four Pillars of PPE":
+
+A. LAB COAT (Class 1 / Class 2 Certified):
+- Required: 100% white cotton or flame-resistant treated Nomex/polyester blend knee-length coat with snap or button fasteners.
+- Fastening: Lab coat must remain fully buttoned up from top to bottom at all times while in the lab. Open/unbuttoned lab coats do not protect chest or torso and pose entanglement hazards.
+- Sleeves: Wrist cuffs should be elasticized or tailored to prevent dragging into chemical containers or Bunsen burners.
+- Decontamination: Never wash contaminated lab coats at home. Use professional facility laundry services.
+
+B. SAFETY GOGGLES & EYE PROTECTION (ANSI Z87.1 D3 Certified):
+- Required: Indirectly vented chemical splash goggles featuring airtight or baffled seals around the eye sockets.
+- Standard prescription eyeglasses or sunglasses DO NOT provide impact or chemical splash protection.
+- When working with high splash hazards, liquid nitrogen, or concentrated acids, add a full polycarbonate face shield OVER the goggles.
+- UV or Laser Operations: Require specialized wavelength-specific laser safety eyewear matched to the optical density (OD) of the beam.
+
+C. PROTECTIVE GLOVES:
+- Required: Nitrile gloves (minimum 4-mil thickness) for general bench chemistry and biological protection.
+- Material Compatibility:
+  * Nitrile: Excellent for weak acids, bases, biological samples, and incidental solvent contact.
+  * Neoprene / Butyl: Required for handling aggressive polar solvents (acetone, ketones, DMF, ethers) and concentrated hydrofluoric acid.
+  * Cryogenic Gloves: Thermal insulated gloves for handling liquid nitrogen dewars.
+  * Heat Resistant: Heavy Kevlar/silicone mitts for autoclaves, muffles, and high-temp ovens.
+- Proper Glove Removal (Doffing): Pinch outside near cuff, peel down inside-out, ball up inside second hand, slide clean finger under second cuff, roll into neat inverted pouch, dispose in solid waste. Never touch doorknobs or phones with gloved hands.
+
+D. RESPIRATORY PROTECTION & MASKS (OSHA 1910.134):
+- Particulate Masks: N95/FFP2 respirators required when handling hazardous powders, crystalline silica, aerosolized biological agents, or airborne allergens.
+- Chemical Vapor Cartridge Respirators (Half-mask / Full-face): Required if chemical vapors exceed permissible exposure limits (PEL) outside certified chemical fume hoods.
+- Surgical / Procedure masks: Provide droplet containment in biological containment level 2 (BSL-2) areas.
+
+2. ATTIRE & FOOTWEAR RESTRICTIONS
+- Legs: Must be completely covered by sturdy long pants or ankle-length trousers. Shorts, skirts, culottes, and leggings/tights are strictly forbidden.
+- Footwear: Fully closed-toe and closed-heel leather or solid non-permeable synthetic shoes. Sandals, flip-flops, crocs with holes, mesh sneakers, and high heels are strictly forbidden.
+- Hair: Long hair (touching collar or longer) must be securely tied back into a bun or ponytail.
+- Jewelry: Dangling chains, loose rings, and wristbands must be removed to avoid snagging and chemical entrapment.
+
+3. PPE COMPLIANCE & RISK GRADING
+- 100% Compliance (Coat + Goggles + Gloves + Mask when required): LOW RISK (Status: Safe & Compliant)
+- Missing 1 item (e.g. gloves or mask in non-volatile area): MEDIUM RISK (Warning issued)
+- Missing 2 items (e.g. goggles and gloves): HIGH RISK (Work halted immediately)
+- Missing Lab Coat and Goggles or multiple personnel unequipped: CRITICAL RISK (Mandatory safety stand-down)

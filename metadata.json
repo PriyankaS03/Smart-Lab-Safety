@@ -1,0 +1,6 @@
+{
+  "name": "Smart Lab Safety – AI-Powered Laboratory Safety Monitoring & PPE Detection System",
+  "description": "Real-time AI-powered laboratory safety monitoring and PPE compliance detection system with YOLO integration, safety alerts, risk analytics, incident management, and RAG safety assistant.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

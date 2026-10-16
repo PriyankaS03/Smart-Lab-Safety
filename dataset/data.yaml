@@ -1,0 +1,18 @@
+# Smart Lab Safety - PPE Detection Dataset Configuration
+# Standard Ultralytics YOLOv8 Dataset Format
+
+path: ../dataset  # dataset root dir
+train: images/train  # train images (relative to 'path')
+val: images/val      # val images (relative to 'path')
+test: images/val     # test images (optional)
+
+# Number of classes
+nc: 5
+
+# Class names (Exact index alignment required for Smart Lab Safety System)
+names:
+  0: person
+  1: lab_coat
+  2: gloves
+  3: safety_goggles
+  4: mask

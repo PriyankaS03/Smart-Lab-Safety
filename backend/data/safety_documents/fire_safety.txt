@@ -1,0 +1,42 @@
+# LABORATORY FIRE SAFETY & EMERGENCY PROTOCOL
+Document ID: SOP-LAB-FIRE-002
+Revision: 3.8 | Classification: Life Safety Mandatory Standard
+
+1. PRIMARY RESPONSE PROTOCOL: R.A.C.E.
+Upon encountering smoke, open flame, or heat in the laboratory, execute the R.A.C.E. sequence immediately:
+
+- R - RESCUE / RELOCATE:
+  Immediately remove anyone in immediate danger, provided you can do so safely without risking your own life. Guide students and visitors toward emergency exits.
+
+- A - ALARM:
+  Pull the nearest manual fire alarm pull station located beside each laboratory exit door. Shout clear warnings: "FIRE! EVACUATE LAB!" Notify building security / emergency dispatch (call 911 or internal extension 5555).
+
+- C - CONFINE:
+  Close all laboratory doors and windows upon leaving to isolate combustion gases and oxygen supply. Pull down sash on fume hoods where chemical reactions are taking place. If accessible without risk, shut off emergency gas master valves (red push buttons).
+
+- E - EXTINGUISH OR EVACUATE:
+  Attempt fire extinguishment ONLY IF:
+  * The fire is small and contained (e.g., wastebasket fire, beaker fire, or small solvent ignition).
+  * You have received hands-on fire extinguisher training within the past 12 months.
+  * You have an unobstructed exit route behind you at all times.
+  * The correct fire extinguisher class is available and fully charged.
+  * If smoke becomes dense or heat increases, ABANDON firefighting and EVACUATE immediately.
+
+2. FIRE EXTINGUISHER OPERATION: P.A.S.S. TECHNIQUE
+- P - PULL the safety pin located at the top of the handle, breaking the plastic inspection seal.
+- A - AIM the nozzle, horn, or hose low, pointing directly at the BASE of the flames, not into the smoke.
+- S - SQUEEZE the operating lever slowly and evenly to discharge the extinguishing agent.
+- S - SWEEP side to side across the base of the fire until the fire is completely extinguished. Continue observing for re-ignition.
+
+3. LABORATORY FIRE CLASSIFICATIONS & AGENT COMPATIBILITY
+- Class A (Ordinary Combustibles): Paper, wood, trash, cardboard. Use Pressurized Water, Foam, or Multi-purpose ABC Dry Chemical.
+- Class B (Flammable Liquids & Solvents): Acetone, ethanol, hexane, toluene, ethers. Use CO2 (Carbon Dioxide) or ABC Dry Chemical. NEVER USE WATER on flammable solvent fires (will spread burning liquid).
+- Class C (Energized Electrical Equipment): Centrifuges, spectrophotometers, incubators, hotplates, power supplies. Use CO2 or Clean Agent extinguishers to avoid electrical shock and equipment damage.
+- Class D (Combustible Metals): Sodium, potassium, magnesium, lithium, metal hydrides, alkyl lithiums. NEVER USE WATER, CO2, OR STANDARD DRY CHEMICAL (causes violent explosion). Use designated Class D Met-L-X or dry powdered graphite/sand only.
+
+4. CLOTHING ON FIRE: STOP, DROP, AND ROLL
+- DO NOT RUN: Running fans oxygen and accelerates burning.
+- Direct the victim to STOP immediately, DROP to the floor, and ROLL back and forth to smother flames.
+- Wrap victim tightly in heavy fire blanket from wall-mounted canister if within immediate arm's reach.
+- Never use a fire extinguisher directly on human skin or face (freezing injury from CO2, caustic skin/respiratory damage from chemical powders).
+- Assist victim immediately to the emergency safety shower to quench residual embers and cool burns.

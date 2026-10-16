@@ -1,0 +1,32 @@
+# COMPRESSED GAS & FLAMMABLE GAS LEAK PROCEDURES
+Document ID: SOP-LAB-GAS-003
+Revision: 3.1 | Classification: Critical Facility Safety Standard
+
+1. HAZARDS OF COMPRESSED AND CRYOGENIC GASES
+Laboratories frequently utilize compressed flammable gases (hydrogen, methane, acetylene), toxic gases (carbon monoxide, ammonia, chlorine), and asphyxiants (nitrogen, argon, helium, carbon dioxide). Leaks create extreme hazards of deflagration, chemical poisoning, or rapid room asphyxiation (oxygen depletion below 19.5%).
+
+2. IMMEDIATE ACTION UPON GAS LEAK DETECTION
+If a gas odor (e.g., mercaptan sulfur smell in natural gas), hissing cylinder noise, or automatic gas detector alarm sounds:
+
+A. FLAMMABLE GAS RELEASE (Hydrogen, Methane, Acetylene, Propane):
+1. CEASE ALL IGNITION SOURCES: Do NOT operate electrical switches, light switches, unplug appliances, or use cell phones in the gas zone (static sparks will cause explosion).
+2. SHUT OFF SOURCE IF SAFE: If cylinder main handwheel or quick-acting emergency shut-off button is within reach and safe to touch without inhalation hazard, close clockwise.
+3. HIT EMERGENCY GAS SHUTOFF: Press the prominent red EMERGENCY GAS SHUTOFF mushroom button located at lab exits. This trips the master solenoid valve on the gas distribution manifold.
+4. EVACUATE IMMEDIATELY: Pull the fire alarm outside the affected room and proceed to exterior assembly point.
+5. NOTIFY EMERGENCY SERVICES: Call Campus Security / 911 from a safe distance outside the building.
+
+B. TOXIC OR CORROSIVE GAS RELEASE (Ammonia, Chlorine, Hydrogen Sulfide, Phosgene):
+1. DO NOT ATTEMPT ENTRY OR INVESTIGATION without Level A/B SCBA HazMat suit.
+2. Evacuate all occupants along the upwind / crosswind direction.
+3. Alert adjacent laboratory suites and building management to initiate HVAC emergency purge exhaust or shutdown.
+
+C. INERT GAS / OXYGEN DEPLETION (Liquid Nitrogen, Argon, Helium Cylinders):
+1. In confined rooms, liquid nitrogen boil-off can displace air in seconds without odor.
+2. If oxygen sensors alarm below 19.5% O2 or a dense white cryogenic vapor cloud is seen rising from dewars, EVACUATE IMMEDIATELY.
+3. Do not re-enter until verified safe by industrial hygiene oxygen sensors reading 20.9% O2.
+
+3. CYLINDER REGULATOR & VALVE INSPECTION
+- Check all cylinder fittings before initial use using an approved non-corrosive leak detection solution (e.g., Snoop) or ultrasonic leak detector.
+- Always secure gas cylinders upright using heavy-gauge chains or dual clamping brackets mounted to solid structural benching.
+- Cylinder protective valve caps must be screwed hand-tight whenever cylinders are in transit or not connected to a manifold regulator.
+- Flashback arrestors must be installed on all fuel gas (acetylene, hydrogen) regulator outlets.

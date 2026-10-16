@@ -1,0 +1,41 @@
+# CHEMICAL SPILL RESPONSE STANDARD OPERATING PROCEDURE (SOP)
+Document ID: SOP-LAB-CHEM-001
+Revision: 4.2 | Classification: Laboratory Safety Standard
+
+1. IMMEDIATE SPILL CLASSIFICATION
+When a chemical release or spill occurs, immediately evaluate the severity into one of two categories:
+
+A. MINOR (SIMPLE) SPILL:
+- Volume less than 500 mL (for non-extremely hazardous chemicals) or 100 mL (for concentrated acids/bases).
+- Low toxicity, non-explosive, non-flammable hazard class.
+- Release is contained to work bench or fume hood.
+- Proper personal protective equipment (PPE) and neutralizers are on site.
+- Laboratory personnel are fully trained and confident in containment.
+
+B. MAJOR (CRITICAL) SPILL:
+- Volume exceeding 500 mL or involving high-hazard materials (carcinogens, reproductive toxins, strong oxidizers, pyrophorics, hydrofluoric acid, cyanide compounds, or radioactive material).
+- Uncontrolled chemical vapors spreading through the room.
+- Immediate threat to human life, respiratory distress, or severe skin exposure.
+- Chemical has entered floor drains, HVAC, or uncontrolled structural crevices.
+
+2. IMMEDIATE ACTIONS FOR MAJOR SPILLS (SWEEP PROTOCOL)
+- S - STOP work and warn all laboratory occupants immediately. Shout "EVACUATE - MAJOR CHEMICAL SPILL!"
+- W - WITHDRAW from the spill area. Close doors behind you to compartmentalize toxic vapor dispersion.
+- E - EVACUATE the building via the nearest emergency exit stairwell. Do NOT use elevators.
+- E - EMERGENCY CALL: Pull manual fire alarm pull station if toxic fumes threaten multiple floors. Dial Emergency Extension 5555 / 911 immediately.
+- P - PROTECT others: Station a trained sentinel outside the building entrance to advise arriving HazMat responders of the chemical identity, SDS, volume, and exact lab room number.
+
+3. MINOR SPILL CLEANUP PROCEDURE (C.L.E.A.N.)
+- C - CHECK PPE: Minimum level required: Heavy chemical-resistant neoprene/nitrile gauntlet gloves, splash-proof chemical goggles with face shield, full-length chemical apron over lab coat, and closed-toe non-permeable boots.
+- L - LOCATE the Spill Kit: Retrieve the designated chemical spill station located at Lab Station Entrance A.
+- E - ENCIRCLE: Spread absorbent spill dikes (vermiculite, polypropylene socks, or neutralizer) starting from the outer perimeter inward to prevent spreading toward drains or bench edges.
+- A - ABSORB & NEUTRALIZE:
+  * For Acid Spills: Apply sodium bicarbonate or calcium carbonate neutralizer slowly until effervescence ceases and pH paper indicates 6.0 - 8.0.
+  * For Base Spills: Apply citric acid or boric acid neutralizer until neutral pH is reached.
+  * For Solvent/Organic Spills: Apply activated charcoal or proprietary solvent absorbent pillows. Never use oxidizing neutralizers on organic solvents.
+- N - NEUTRALIZE & DISPOSE: Collect spent absorbent using non-sparking polypropylene dustpan and scraper. Place in heavy-duty polyethylene hazardous waste bag. Seal with zip-tie, attach Hazardous Chemical Waste Tag indicating chemical name and date, and schedule EHS pickup.
+
+4. FIRST AID FOR CHEMICAL EXPOSURE
+- Skin Contact: Immediately remove contaminated clothing under safety shower. Flush exposed skin with continuous tepid water for minimum 15 MINUTES. Seek medical assessment.
+- Eye Splash: Hold eyelids open with clean fingers and flush at the emergency eyewash station for continuous 15 MINUTES. Do NOT rub eyes. Contact emergency medical services immediately.
+- Inhalation: Remove victim to fresh air if safe to do so. Administer oxygen only if qualified medical personnel are present.
