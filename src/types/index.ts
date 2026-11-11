@@ -15,6 +15,7 @@ export type NavItem =
   | 'assistant'
   | 'procedures'
   | 'settings'
+  | 'users'
   | 'about';
 
 export interface BoundingBox {
@@ -252,4 +253,23 @@ export interface GemiChatRequest {
     aqi?: number;
   };
 }
+
+// ── User & Authentication Types ───────────────────────────────────────────────
+
+export type UserRole = 'admin' | 'assistant' | 'student';
+
+export interface User {
+  id: number;
+  username: string;
+  full_name: string;
+  email: string;
+  role: UserRole;
+  created_at?: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: User;
+}
+
 

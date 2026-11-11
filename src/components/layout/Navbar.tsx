@@ -8,9 +8,11 @@ import {
   AlertTriangle,
   Flame,
   HelpCircle,
-  Sparkles
+  Sparkles,
+  LogOut,
+  User as UserIcon
 } from 'lucide-react';
-import { RiskLevel } from '../../types';
+import { RiskLevel, User } from '../../types';
 
 interface NavbarProps {
   currentRiskLevel: RiskLevel;
@@ -20,6 +22,8 @@ interface NavbarProps {
   setIsDemoMode: (val: boolean) => void;
   onRefresh: () => void;
   onNavigateAlerts: () => void;
+  currentUser?: User | null;
+  onLogout?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -29,7 +33,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   isDemoMode,
   setIsDemoMode,
   onRefresh,
-  onNavigateAlerts
+  onNavigateAlerts,
+  currentUser,
+  onLogout
 }) => {
   const [timeStr, setTimeStr] = useState<string>('');
 
@@ -115,6 +121,48 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <RefreshCw className="w-4 h-4" />
         </button>
+
+        {/* User Profile & Logout */}
+        {currentUser && (
+          <div className="flex items-center gap-2 pl-3 ml-1 border-l border-slate-200">
+            <div className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-200/70">
+              <div
+                className={`w-7 h-7 rounded-lg font-bold text-xs flex items-center justify-center text-white shrink-0 ${
+                  currentUser.role === 'admin'
+                    ? 'bg-indigo-600 shadow-sm shadow-indigo-500/20'
+                    : currentUser.role === 'assistant'
+                    ? 'bg-sky-600 shadow-sm shadow-sky-500/20'
+                    : 'bg-emerald-600 shadow-sm shadow-emerald-500/20'
+                }`}
+              >
+                {currentUser.full_name ? currentUser.full_name.charAt(0) : 'U'}
+              </div>
+              <div className="hidden lg:block text-left">
+                <div className="text-xs font-bold text-slate-800 leading-tight truncate max-w-[130px]">
+                  {currentUser.full_name}
+                </div>
+                <div className="text-[10px] font-semibold text-slate-500 uppercase leading-none mt-0.5">
+                  {currentUser.role === 'admin'
+                    ? 'Supervisor'
+                    : currentUser.role === 'assistant'
+                    ? 'Lab Assistant'
+                    : 'Researcher'}
+                </div>
+              </div>
+            </div>
+
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 transition-colors cursor-pointer"
+                title="Sign out of Smart Lab"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );

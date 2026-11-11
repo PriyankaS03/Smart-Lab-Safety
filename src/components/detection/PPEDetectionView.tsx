@@ -22,7 +22,8 @@ import {
   Sliders,
   Shield,
   Eye,
-  SwitchCamera
+  SwitchCamera,
+  Users
 } from "lucide-react";
 import { DetectionResult } from "../../types";
 import { api } from "../../services/api";
@@ -358,7 +359,9 @@ export const PPEDetectionView: React.FC<PPEDetectionViewProps> = ({ isDemoMode, 
         image_base64: uploadedImage,
         is_demo: false,
         source: "image_upload",
-        confidence_threshold: confidenceThreshold
+        confidence_threshold: confidenceThreshold,
+        image_width: uploadedImgEl?.naturalWidth,
+        image_height: uploadedImgEl?.naturalHeight
       });
       setUploadResult(res);
       if (onDetectionUpdate) {
@@ -373,6 +376,56 @@ export const PPEDetectionView: React.FC<PPEDetectionViewProps> = ({ isDemoMode, 
     } catch (e: any) {
       setUploadError(e?.message || "Detection failed. Please try again.");
     } finally {
+      setIsDetecting(false);
+    }
+  };
+
+  const loadSampleImage = async () => {
+    try {
+      setIsDetecting(true);
+      setUploadError(null);
+      const res = await fetch('/api/detection/sample-image');
+      if (!res.ok) throw new Error('Could not load sample image');
+      const blob = await res.blob();
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target?.result as string;
+        setUploadedImage(dataUrl);
+        const img = new Image();
+        img.onload = async () => {
+          setUploadedImgEl(img);
+          const canvas = uploadCanvasRef.current;
+          if (canvas) {
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            canvas.getContext("2d")?.drawImage(img, 0, 0);
+          }
+          // Automatically run detection on the sample
+          try {
+            const detRes = await api.runDetection({
+              image_base64: dataUrl,
+              is_demo: false,
+              source: "image_upload",
+              confidence_threshold: confidenceThreshold,
+              image_width: img.naturalWidth,
+              image_height: img.naturalHeight
+            });
+            setUploadResult(detRes);
+            if (onDetectionUpdate) onDetectionUpdate(detRes);
+            if (canvas) {
+              drawBoxesOnCanvas(canvas, img, detRes.raw_boxes);
+            }
+          } catch (err: any) {
+            setUploadError(err.message || 'Detection failed');
+          } finally {
+            setIsDetecting(false);
+          }
+        };
+        img.src = dataUrl;
+      };
+      reader.readAsDataURL(blob);
+    } catch (err: any) {
+      setUploadError(err.message || 'Failed to load sample image');
       setIsDetecting(false);
     }
   };
@@ -691,6 +744,44 @@ export const PPEDetectionView: React.FC<PPEDetectionViewProps> = ({ isDemoMode, 
           {/* ── TAB 2: UPLOAD IMAGE ────────────────────────────────────────────── */}
           {activeTab === "upload" && (
             <>
+              {/* Benchmark Sample Photo Quick Loader */}
+              {!uploadedImage && (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200/80 shadow-xs mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-sm shadow-indigo-500/25">
+                      <Users className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-xs text-indigo-950">Dual-Scientist Benchmark Image</span>
+                        <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-200/70 text-indigo-800 font-semibold uppercase">P1 & P2 Test</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-0.5">
+                        Scientist 1 (Left at Microscope): Missing Goggles &bull; Scientist 2 (Right with Clipboard): 100% Safe
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={loadSampleImage}
+                    disabled={isDetecting}
+                    className="self-start sm:self-auto px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
+                  >
+                    {isDetecting ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Loading...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-3.5 h-3.5 text-indigo-200" />
+                        <span>Load This Image</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+
               {!uploadedImage && (
                 <div
                   onDrop={onDrop}
@@ -777,6 +868,7 @@ export const PPEDetectionView: React.FC<PPEDetectionViewProps> = ({ isDemoMode, 
                 <span className="text-xs font-bold text-slate-700">Test Scenarios:</span>
                 <div className="flex flex-wrap items-center gap-2">
                   {[
+                    { key: "dual_scientists",     label: "★ Dual Scientists (P1: Missing Goggles, P2: Safe)", active: "bg-indigo-600" },
                     { key: "compliant",           label: "1. Full Compliance (100%)",       active: "bg-emerald-600" },
                     { key: "missing_goggles",     label: "2. Missing Goggles (75%)",        active: "bg-amber-600" },
                     { key: "missing_coat_gloves", label: "3. Missing Coat & Gloves (50%)", active: "bg-orange-600" },
@@ -822,6 +914,79 @@ export const PPEDetectionView: React.FC<PPEDetectionViewProps> = ({ isDemoMode, 
                   <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />All required PPE detected
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Per-Person Compliance Breakdown */}
+          {activeResult && activeResult.persons && activeResult.persons.length > 0 && (
+            <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold text-slate-900">Personnel PPE Status</h3>
+                <span className="text-[11px] font-semibold text-slate-500 px-2 py-0.5 rounded-md bg-slate-100">
+                  {activeResult.persons.length} Workers In View
+                </span>
+              </div>
+              <div className="space-y-2.5">
+                {activeResult.persons.map((p) => {
+                  const isSafe = p.status === 'COMPLIANT' || p.compliance_score >= 90;
+                  return (
+                    <div
+                      key={p.person_index}
+                      className={`p-3 rounded-xl border transition-all ${
+                        isSafe
+                          ? 'bg-emerald-50/60 border-emerald-200 text-emerald-950'
+                          : 'bg-amber-50/60 border-amber-200 text-amber-950'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className={`w-2.5 h-2.5 rounded-full ${isSafe ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'}`} />
+                          <span className="font-bold text-xs">Person #{p.person_index}</span>
+                          <span className="text-[10px] text-slate-500">
+                            {p.person_index === 1 ? '(Microscope Bay)' : '(Clipboard Desk)'}
+                          </span>
+                        </div>
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide ${
+                            isSafe ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-amber-100 text-amber-800 border border-amber-200'
+                          }`}
+                        >
+                          {isSafe ? '100% Safe' : `${p.compliance_score}% - Violation`}
+                        </span>
+                      </div>
+
+                      {/* PPE Items Matrix */}
+                      <div className="mt-2.5 grid grid-cols-4 gap-1 text-[10px] text-center font-semibold">
+                        <span className={`py-1 rounded-md border ${p.has_lab_coat ? 'bg-white border-emerald-300 text-emerald-700' : 'bg-rose-50 border-rose-200 text-rose-700 line-through'}`}>
+                          Coat {p.has_lab_coat ? '✓' : '✕'}
+                        </span>
+                        <span className={`py-1 rounded-md border ${p.has_safety_goggles ? 'bg-white border-cyan-300 text-cyan-700' : 'bg-rose-100 border-rose-300 text-rose-800 font-bold underline'}`}>
+                          Goggles {p.has_safety_goggles ? '✓' : 'MISSING'}
+                        </span>
+                        <span className={`py-1 rounded-md border ${p.has_mask ? 'bg-white border-amber-300 text-amber-700' : 'bg-rose-50 border-rose-200 text-rose-700 line-through'}`}>
+                          Mask {p.has_mask ? '✓' : '✕'}
+                        </span>
+                        <span className={`py-1 rounded-md border ${p.has_gloves ? 'bg-white border-purple-300 text-purple-700' : 'bg-rose-50 border-rose-200 text-rose-700 line-through'}`}>
+                          Gloves {p.has_gloves ? '✓' : '✕'}
+                        </span>
+                      </div>
+
+                      {/* Warning / Safe notice */}
+                      {p.missing_items.length > 0 ? (
+                        <div className="mt-2 text-[11px] text-rose-700 flex items-center gap-1.5 font-bold bg-white/80 p-1.5 rounded-lg border border-rose-200/60">
+                          <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                          <span>Missing: {p.missing_items.map(m => m.replace(/_/g, ' ')).join(', ')}</span>
+                        </div>
+                      ) : (
+                        <div className="mt-2 text-[11px] text-emerald-700 flex items-center gap-1.5 font-bold bg-white/80 p-1.5 rounded-lg border border-emerald-200/60">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span>All Required PPE Verified — Person #{p.person_index} is Safe</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
 

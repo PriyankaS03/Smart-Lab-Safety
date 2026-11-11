@@ -14,19 +14,14 @@ import {
   Layers,
   Sparkles,
   Cpu,
+  Users as UsersIcon,
+  UserCheck,
+  GraduationCap,
+  ShieldAlert
 } from 'lucide-react';
+import { NavItem, User } from '../../types';
 
-export type NavItem =
-  | 'dashboard'
-  | 'detection'
-  | 'alerts'
-  | 'incidents'
-  | 'analytics'
-  | 'sensors'
-  | 'assistant'
-  | 'procedures'
-  | 'settings'
-  | 'about';
+export type { NavItem };
 
 interface SidebarProps {
   currentTab: NavItem;
@@ -34,6 +29,7 @@ interface SidebarProps {
   activeAlertCount: number;
   openIncidentCount: number;
   isDemoMode: boolean;
+  currentUser?: User | null;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -41,41 +37,52 @@ export const Sidebar: React.FC<SidebarProps> = ({
   setCurrentTab,
   activeAlertCount,
   openIncidentCount,
-  isDemoMode
+  isDemoMode,
+  currentUser
 }) => {
+  const role = currentUser?.role || 'admin';
+
   // Operations & Vision group
-  const opsItems: { id: NavItem; label: string; icon: React.ReactNode; badge?: number; badgeColor?: string }[] = [
+  const rawOpsItems: { id: NavItem; label: string; icon: React.ReactNode; badge?: number; badgeColor?: string; roles?: string[] }[] = [
     { id: 'dashboard',  label: 'Dashboard',       icon: <LayoutDashboard className="w-5 h-5" /> },
-    { id: 'detection',  label: 'AI PPE Detection', icon: <ShieldCheck className="w-5 h-5" /> },
+    { id: 'detection',  label: role === 'student' ? 'PPE Self-Check' : 'AI PPE Detection', icon: <ShieldCheck className="w-5 h-5" /> },
     {
       id: 'alerts',
       label: 'Safety Alerts',
       icon: <AlertTriangle className="w-5 h-5" />,
       badge: activeAlertCount > 0 ? activeAlertCount : undefined,
-      badgeColor: 'bg-rose-500 text-white'
+      badgeColor: 'bg-rose-500 text-white',
+      roles: ['admin', 'assistant']
     },
   ];
 
   // Safety Management group
-  const safetyItems: { id: NavItem; label: string; icon: React.ReactNode; badge?: number; badgeColor?: string }[] = [
+  const rawSafetyItems: { id: NavItem; label: string; icon: React.ReactNode; badge?: number; badgeColor?: string; roles?: string[] }[] = [
     {
       id: 'incidents',
       label: 'Incidents',
       icon: <FileSpreadsheet className="w-5 h-5" />,
       badge: openIncidentCount > 0 ? openIncidentCount : undefined,
-      badgeColor: 'bg-amber-500 text-white'
+      badgeColor: 'bg-amber-500 text-white',
+      roles: ['admin', 'assistant']
     },
-    { id: 'analytics', label: 'Analytics',                 icon: <BarChart3 className="w-5 h-5" /> },
-    { id: 'sensors',   label: 'Virtual Sensors',           icon: <Cpu className="w-5 h-5" /> },
-    { id: 'assistant', label: 'RAG',                       icon: <Bot className="w-5 h-5" /> },
+    { id: 'analytics', label: 'Analytics',                 icon: <BarChart3 className="w-5 h-5" />, roles: ['admin', 'assistant'] },
+    { id: 'sensors',   label: 'Virtual Sensors',           icon: <Cpu className="w-5 h-5" />, roles: ['admin', 'assistant'] },
+    { id: 'assistant', label: 'RAG Safety Bot',            icon: <Bot className="w-5 h-5" /> },
     { id: 'procedures',label: 'Safety Procedures',         icon: <BookOpen className="w-5 h-5" /> },
   ];
 
   // System & Setup group
-  const systemItems: { id: NavItem; label: string; icon: React.ReactNode }[] = [
-    { id: 'settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
-    { id: 'about',    label: 'About & Setup', icon: <Info className="w-5 h-5" /> },
+  const rawSystemItems: { id: NavItem; label: string; icon: React.ReactNode; roles?: string[] }[] = [
+    { id: 'users',    label: 'Personnel Accounts', icon: <UsersIcon className="w-5 h-5" />, roles: ['admin'] },
+    { id: 'settings', label: 'Settings',           icon: <Settings className="w-5 h-5" />, roles: ['admin'] },
+    { id: 'about',    label: 'About & Setup',      icon: <Info className="w-5 h-5" /> },
   ];
+
+  // Filter items based on current role
+  const opsItems = rawOpsItems.filter(item => !item.roles || item.roles.includes(role));
+  const safetyItems = rawSafetyItems.filter(item => !item.roles || item.roles.includes(role));
+  const systemItems = rawSystemItems.filter(item => !item.roles || item.roles.includes(role));
 
   function renderGroup(
     items: { id: NavItem; label: string; icon: React.ReactNode; badge?: number; badgeColor?: string }[],
@@ -124,6 +131,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <p className="text-[11px] text-slate-500 font-medium mt-1">AI PPE & Hazard System</p>
           </div>
         </div>
+
+        {/* Active Personnel Role Card */}
+        {currentUser && (
+          <div className="mx-3 mt-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-2.5">
+            <div className={`w-8 h-8 rounded-lg font-bold text-xs flex items-center justify-center text-white shrink-0 ${
+              currentUser.role === 'admin'
+                ? 'bg-indigo-600 shadow-sm shadow-indigo-500/20'
+                : currentUser.role === 'assistant'
+                ? 'bg-sky-600 shadow-sm shadow-sky-500/20'
+                : 'bg-emerald-600 shadow-sm shadow-emerald-500/20'
+            }`}>
+              {currentUser.role === 'admin' ? (
+                <ShieldAlert className="w-4 h-4" />
+              ) : currentUser.role === 'assistant' ? (
+                <UserCheck className="w-4 h-4" />
+              ) : (
+                <GraduationCap className="w-4 h-4" />
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-bold text-slate-900 truncate">
+                {currentUser.full_name}
+              </div>
+              <div className="text-[10px] font-semibold text-slate-500 truncate">
+                {currentUser.role === 'admin'
+                  ? 'Admin / Supervisor'
+                  : currentUser.role === 'assistant'
+                  ? 'Lab Assistant'
+                  : 'Student / Researcher'}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Navigation list */}
         <nav className="p-3 space-y-1 overflow-y-auto">

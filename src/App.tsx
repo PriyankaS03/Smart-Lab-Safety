@@ -12,11 +12,16 @@ import { SettingsView } from './components/settings/SettingsView';
 import { AboutView } from './components/about/AboutView';
 import { VirtualSensorView } from './components/sensors/VirtualSensorView';
 import { GemiChatbotWidget } from './components/assistant/GemiChatbotWidget';
+import { LoginPage } from './components/auth/LoginPage';
+import { UserManagementView } from './components/users/UserManagementView';
 
-import { DashboardStats, AlertItem, IncidentItem, DetectionResult } from './types';
+import { DashboardStats, AlertItem, IncidentItem, DetectionResult, User } from './types';
 import { api } from './services/api';
+import { Loader2, ShieldCheck } from 'lucide-react';
 
 export default function App() {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<NavItem>('dashboard');
   const [isDemoMode, setIsDemoMode] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
@@ -28,11 +33,29 @@ export default function App() {
   const [incidents, setIncidents] = useState<IncidentItem[]>([]);
 
   useEffect(() => {
-    loadAllData();
-    // Periodic refresh every 30 seconds
+    checkInitialAuth();
+  }, []);
+
+  const checkInitialAuth = async () => {
+    try {
+      const user = await api.getCurrentUser();
+      if (user) {
+        setCurrentUser(user);
+        loadAllData();
+      }
+    } catch (err) {
+      console.warn('Authentication session not active:', err);
+    } finally {
+      setIsAuthChecking(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!currentUser) return;
+    // Periodic refresh every 30 seconds when authenticated
     const interval = setInterval(loadAllData, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [currentUser]);
 
   const loadAllData = async () => {
     try {
@@ -61,11 +84,54 @@ export default function App() {
     loadAllData();
   };
 
+  const handleLoginSuccess = (user: User) => {
+    setCurrentUser(user);
+    setCurrentTab('dashboard');
+    loadAllData();
+  };
+
+  const handleLogout = async () => {
+    await api.logout();
+    setCurrentUser(null);
+    setCurrentTab('dashboard');
+  };
+
+  // Role-based route guard
+  useEffect(() => {
+    if (currentUser && currentUser.role !== 'admin') {
+      if (currentTab === 'settings' || currentTab === 'users') {
+        setCurrentTab('dashboard');
+      }
+    }
+  }, [currentUser, currentTab]);
+
   const activeAlertCount = alerts.filter(a => a.status === 'ACTIVE').length;
   const openIncidentCount = incidents.filter(i => i.status !== 'RESOLVED').length;
   const currentRiskLevel = stats?.current_risk_level || 'LOW';
   const currentRiskScore = stats?.current_risk_score || 18.0;
 
+  // 1. Initial Authentication Loading Screen
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50/40">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 flex items-center justify-center text-white shadow-xl shadow-blue-500/25 mb-4 animate-pulse">
+          <ShieldCheck className="w-7 h-7" />
+        </div>
+        <div className="flex items-center gap-2 text-slate-700 font-bold text-sm">
+          <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+          <span>Initializing Smart Lab Safety System...</span>
+        </div>
+        <p className="text-xs text-slate-400 mt-1 font-mono">Verifying personnel authentication</p>
+      </div>
+    );
+  }
+
+  // 2. Unauthenticated State -> Professional Chemical Laboratory Login Page
+  if (!currentUser) {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  }
+
+  // 3. Authenticated State -> Full System with Role-Specific Access
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-slate-50 font-sans text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
       {/* Sidebar Navigation */}
@@ -75,6 +141,7 @@ export default function App() {
         activeAlertCount={activeAlertCount}
         openIncidentCount={openIncidentCount}
         isDemoMode={isDemoMode}
+        currentUser={currentUser}
       />
 
       {/* Main Content Area */}
@@ -88,6 +155,8 @@ export default function App() {
           setIsDemoMode={setIsDemoMode}
           onRefresh={loadAllData}
           onNavigateAlerts={() => setCurrentTab('alerts')}
+          currentUser={currentUser}
+          onLogout={handleLogout}
         />
 
         {/* Dynamic View Scrollport */}
@@ -100,6 +169,7 @@ export default function App() {
                 onResolveAlert={handleResolveAlert}
                 isDemoMode={isDemoMode}
                 onOpenGemiWithPrompt={prompt => setExternalGemiPrompt(prompt)}
+                currentUser={currentUser}
               />
             )}
 
@@ -132,7 +202,11 @@ export default function App() {
 
             {currentTab === 'procedures' && <SafetyProceduresView />}
 
-            {currentTab === 'settings' && <SettingsView />}
+            {currentTab === 'users' && currentUser.role === 'admin' && (
+              <UserManagementView currentUser={currentUser} />
+            )}
+
+            {currentTab === 'settings' && currentUser.role === 'admin' && <SettingsView />}
 
             {currentTab === 'about' && <AboutView />}
           </div>

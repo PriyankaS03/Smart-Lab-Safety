@@ -11,7 +11,33 @@ import {
   SensorAlert,
   RiskFusionEvent,
   SimulationStatus,
+  User,
+  UserRole,
+  AuthResponse,
 } from '../types';
+
+const TOKEN_KEY = 'smart_lab_auth_token';
+
+export const authStorage = {
+  getToken(): string | null {
+    try {
+      return localStorage.getItem(TOKEN_KEY);
+    } catch {
+      return null;
+    }
+  },
+  setToken(token: string) {
+    try {
+      localStorage.setItem(TOKEN_KEY, token);
+    } catch {}
+  },
+  clearToken() {
+    try {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem('smart_lab_user_cache');
+    } catch {}
+  }
+};
 
 export const api = {
   // ── Dashboard ──────────────────────────────────────────────────────────────
@@ -28,6 +54,8 @@ export const api = {
     is_demo?: boolean;
     scenario?: string;
     confidence_threshold?: number;
+    image_width?: number;
+    image_height?: number;
   }): Promise<DetectionResult> {
     const res = await fetch('/api/detection/detect', {
       method: 'POST',
@@ -277,5 +305,126 @@ export const api = {
     const res = await fetch('/api/sensors/simulation/status');
     if (!res.ok) throw new Error('Failed to get simulation status');
     return res.json();
+  },
+
+  // ── Authentication & Personnel Management ──────────────────────────────────
+  async login(credentials: { email: string; password: string }): Promise<AuthResponse> {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials)
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || 'Login failed. Please check your credentials.');
+    }
+    const data: AuthResponse = await res.json();
+    authStorage.setToken(data.token);
+    try {
+      localStorage.setItem('smart_lab_user_cache', JSON.stringify(data.user));
+    } catch {}
+    return data;
+  },
+
+  async register(data: {
+    full_name: string;
+    username?: string;
+    email: string;
+    password: string;
+    role: UserRole;
+  }): Promise<AuthResponse> {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || 'Registration failed. Please verify your information.');
+    }
+    const authData: AuthResponse = await res.json();
+    authStorage.setToken(authData.token);
+    try {
+      localStorage.setItem('smart_lab_user_cache', JSON.stringify(authData.user));
+    } catch {}
+    return authData;
+  },
+
+  async getCurrentUser(): Promise<User | null> {
+    const token = authStorage.getToken();
+    if (!token) return null;
+
+    try {
+      const res = await fetch('/api/auth/me', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) {
+        authStorage.clearToken();
+        return null;
+      }
+      const data = await res.json();
+      try {
+        localStorage.setItem('smart_lab_user_cache', JSON.stringify(data.user));
+      } catch {}
+      return data.user;
+    } catch {
+      return null;
+    }
+  },
+
+  async logout(): Promise<void> {
+    const token = authStorage.getToken();
+    if (token) {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` }
+      }).catch(() => {});
+    }
+    authStorage.clearToken();
+  },
+
+  async getUsers(): Promise<User[]> {
+    const token = authStorage.getToken();
+    const res = await fetch('/api/auth/users', {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+    if (!res.ok) throw new Error('Failed to load user accounts');
+    return res.json();
+  },
+
+  async createUser(userData: {
+    full_name: string;
+    username: string;
+    email: string;
+    password: string;
+    role: UserRole;
+  }): Promise<User> {
+    const token = authStorage.getToken();
+    const res = await fetch('/api/auth/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify(userData)
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || 'Failed to create user account');
+    }
+    const data = await res.json();
+    return data.user;
+  },
+
+  async deleteUser(userId: number): Promise<void> {
+    const token = authStorage.getToken();
+    const res = await fetch(`/api/auth/users/${userId}`, {
+      method: 'DELETE',
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || 'Failed to delete user account');
+    }
   },
 };

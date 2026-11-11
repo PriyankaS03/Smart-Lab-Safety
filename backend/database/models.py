@@ -9,8 +9,10 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(100), unique=True, index=True, nullable=False)
     full_name = Column(String(200), nullable=False)
-    role = Column(String(50), default="lab_technician")  # lab_technician, safety_officer, lab_director
+    role = Column(String(50), default="student")  # admin, assistant, student
     email = Column(String(150), unique=True, index=True, nullable=False)
+    password_hash = Column(Text, nullable=True)
+    password_salt = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class Detection(Base):

@@ -30,7 +30,7 @@ import {
   RotateCcw,
   Info
 } from 'lucide-react';
-import { DashboardStats, AlertItem, RiskLevel, SensorReading, RiskFusionEvent, ZoneStatus } from '../../types';
+import { DashboardStats, AlertItem, RiskLevel, SensorReading, RiskFusionEvent, ZoneStatus, User } from '../../types';
 import { api } from '../../services/api';
 
 interface DashboardViewProps {
@@ -39,6 +39,7 @@ interface DashboardViewProps {
   onResolveAlert: (id: string, notes: string) => Promise<void>;
   isDemoMode: boolean;
   onOpenGemiWithPrompt?: (prompt: string) => void;
+  currentUser?: User | null;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -46,7 +47,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onNavigate,
   onResolveAlert,
   isDemoMode,
-  onOpenGemiWithPrompt
+  onOpenGemiWithPrompt,
+  currentUser
 }) => {
   const [resolvingId, setResolvingId] = useState<string | null>(null);
   const [sensorData, setSensorData] = useState<SensorReading | null>(null);
@@ -222,6 +224,82 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           >
             <X className="w-3.5 h-3.5" />
           </button>
+        </div>
+      )}
+
+      {/* Role-Specific Operational Context Banner */}
+      {currentUser && (
+        <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm ${
+          currentUser.role === 'admin'
+            ? 'bg-indigo-50/70 border-indigo-200/90 text-indigo-950'
+            : currentUser.role === 'assistant'
+            ? 'bg-sky-50/70 border-sky-200/90 text-sky-950'
+            : 'bg-emerald-50/70 border-emerald-200/90 text-emerald-950'
+        }`}>
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 ${
+              currentUser.role === 'admin' ? 'bg-indigo-600 shadow-sm shadow-indigo-500/25' : currentUser.role === 'assistant' ? 'bg-sky-600 shadow-sm shadow-sky-500/25' : 'bg-emerald-600 shadow-sm shadow-emerald-500/25'
+            }`}>
+              {currentUser.role === 'admin' ? (
+                <ShieldAlert className="w-5 h-5" />
+              ) : currentUser.role === 'assistant' ? (
+                <CheckCircle2 className="w-5 h-5" />
+              ) : (
+                <ShieldCheck className="w-5 h-5" />
+              )}
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-bold uppercase tracking-wider">
+                  {currentUser.role === 'admin'
+                    ? 'Lab Supervisor Active Session'
+                    : currentUser.role === 'assistant'
+                    ? 'Lab Assistant Operational Shift'
+                    : 'Student / Researcher Safety Portal'}
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold bg-white border border-current/20">
+                  {currentUser.full_name}
+                </span>
+              </div>
+              <p className="text-xs opacity-80 mt-0.5">
+                {currentUser.role === 'admin'
+                  ? 'Full administrative governance active. You can monitor all feeds, manage incident dispatches, and provision user accounts.'
+                  : currentUser.role === 'assistant'
+                  ? 'Active shift for Chemistry Lab 3B. Real-time PPE violation triage, sensor thresholds, and alert resolutions enabled.'
+                  : 'Personal laboratory compliance mode. Verify safety goggles, lab coat, and nitrile gloves prior to active bench experiments.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            {currentUser.role === 'admin' && (
+              <button
+                onClick={() => onNavigate('users')}
+                className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>Manage Accounts</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+            {currentUser.role === 'assistant' && (
+              <button
+                onClick={() => onNavigate('alerts')}
+                className="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>Review Active Alerts</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+            {currentUser.role === 'student' && (
+              <button
+                onClick={() => onNavigate('detection')}
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>Run PPE Self-Check</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
         </div>
       )}
 
